@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 生成物
+*.words.json
+*.srt
+out/
+output/
+
+# 媒体（仓库只放流程与脚本）
+*.mp3
+*.wav
+*.flac
+*.m4a
+*.mp4
+*.mov
+
+# 凭据（永不入库）
+.env
+.env.*
+*key*.txt
+credentials*
+
+# 系统
+.DS_Store
+Thumbs.db
+desktop.ini
