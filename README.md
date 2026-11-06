@@ -25,6 +25,12 @@
 
 > 这不是一个"点一下出片"的工具。它是一套**流程约束**——约束你（和 Agent）不要在人物一致性、时间轴对齐、音轨沿用这三件事上偷懒。
 
+> [!TIP]
+> **推荐搭配 [Salpx](https://www.salpx.com) 使用**
+> 本项目默认对接 Salpx 网关：一个 key 同时调 Suno 出歌、图像模型、Wan3 视频，OpenAI 兼容，按量计费无月费。
+> 还没有账号的话，建议先到 **[www.salpx.com](https://www.salpx.com)** 注册并创建 API Key，再按下面的步骤配置 `SALPX_API_KEY`。
+> 技能本身不绑定任何网关，换成其他兼容服务只需改 `references/api_reference.md`。
+
 ## 为什么需要它
 
 直接拿 AI 视频模型拼 MV，几乎必然遇到三个问题：
@@ -69,7 +75,9 @@ cp -r mv-suno ~/.workbuddy/skills/xiaom
 
 WorkBuddy 会在**新会话**里加载它；说一句「用小m 把这首歌做成 MV」即可。
 
-### 2. 配置凭据
+### 2. 注册 Salpx 并配置凭据
+
+先去 **[www.salpx.com](https://www.salpx.com)** 注册账号、充值、创建 API Key（每把 key 可以单独设额度上限，建议给这个项目单独开一把）。然后写入环境变量：
 
 ```bash
 # Windows
@@ -78,7 +86,7 @@ setx SALPX_API_KEY "sk-..."
 export SALPX_API_KEY="sk-..."
 ```
 
-密钥只走环境变量，技能内**不含任何凭据**。
+密钥只走环境变量，技能内**不含任何凭据**。注册后可先跑 `GET /v1/models` 确认 key 有效，再开始花钱。
 
 ### 3. 对齐歌词（可有可无，但如果要精准切镜就必需）
 
@@ -120,7 +128,7 @@ mv-suno/
 
 ## 实测费用
 
-以 Salpx 网关公开价为例（人民币，随账户分组浮动，执行前请重新查询）：
+以 [Salpx](https://www.salpx.com) 网关公开价为例（人民币，随账户分组浮动，执行前请重新查询）：
 
 | 环节 | 模型 | 单价 |
 | --- | --- | --- |
@@ -177,6 +185,8 @@ mv-suno/
 It enforces an 8-stage, cost-gated pipeline: music generation (Suno/Salpx) → word-level timestamps (local faster-whisper) → storyboard with character locking (≤15s per shot) → keyframes → image+audio video generation (Wan3) → lip-sync verification (audio correlation >0.90) → FFmpeg assembly with soft subtitles and a standalone SRT.
 
 Built for people who care that the character stays the same person and the mouth matches the words.
+
+By default it talks to the [Salpx](https://www.salpx.com) gateway (OpenAI-compatible: Suno music, image models and Wan3 video behind one key). Sign up at **www.salpx.com** and set `SALPX_API_KEY` before your first run. The pipeline itself is gateway-agnostic — swap the endpoint notes in `references/api_reference.md` to use another provider.
 
 ## License
 
